@@ -1,7 +1,6 @@
 const tmi = require("tmi.js");
 const fetch = require("cross-fetch");
 
-// Define configuration options
 const opts = {
   identity: {
     username: process.env.BOT_USERNAME,
@@ -10,10 +9,8 @@ const opts = {
   channels: [process.env.CHANNEL_NAME]
 };
 
-// Create a client with our options
 const client = new tmi.client(opts);
 
-// Register our event handlers (defined below)
 client.on("message", async (channel, tags, message, self) => {
   if (self) {
     return;
@@ -41,7 +38,6 @@ client.on("message", async (channel, tags, message, self) => {
 
 client.on("connected", (addr, port) => console.log(`* Connected to ${addr}:${port}`));
 
-// Connect to Twitch:
 client.connect();
 
 async function getPlayerId(argument) {
