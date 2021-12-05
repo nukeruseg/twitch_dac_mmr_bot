@@ -1,4 +1,5 @@
 const tmi = require('tmi.js');
+import fetch from 'node-fetch';
 
 // Define configuration options
 const opts = {
@@ -24,33 +25,28 @@ client.connect();
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
+  return Math.floor(Math.random() * (max - min)) + min; 
 }
 
 // Called every time a message comes in
-function async onMessageHandler (target, context, msg, self) {
+async function onMessageHandler (target, context, msg, self) {
   if (self) { return; } // Ignore messages from the bot
-
+  console.log(msg);
   // Remove whitespace from chat message
-  const command = msg.trim(' ');
+  const command = msg.split(' ');
   const commandName = command[0];
-  if (commandName !== 'rank') {
-    console.log('Unknown command');
+  if (commandName !== '!rank') {
+    await client.say('Unknown command');
     return;
   }
   const playerId = command[1];
   const randomInt = getRandomInt(0, 10000);
   const url = `http://autochess.ppbizon.com/courier/get/@${playerId}?hehe=${randomInt}`;
-  const response = await fetch();
-
-  // If the command is known, let's execute it
-  if (commandName === '!ran') {
-    const num = rollDice(commandName);
-    client.say(target, `You rolled a ${num}. Link: https://glitch.com/~twitch-chatbot`);
-    console.log(`* Executed ${commandName} command`);
-  } else {
-    console.log(`* Unknown command ${commandName}`);
-  }
+  const response = await fetch(url);
+  const json = await response.json();
+  client.say(json);
+  const mmr_level = json['mmr_level'];
+  client.say(mmr_level);
 }
 
 // Function called when the "dice" command is issued
