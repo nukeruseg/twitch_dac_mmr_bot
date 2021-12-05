@@ -18,8 +18,8 @@ client.on("message", async (channel, tags, message, self) => {
   if (self) {
     return;
   }
-  console.log(tags);
-  const command = message.split(" ");
+  if (message.startsWith('!'))
+  const command = message.split(' ');
   const [commandName, player] = command;
   if (commandName !== "!rank") {
     await client.say(channel, "Unknown command");
@@ -30,13 +30,12 @@ client.on("message", async (channel, tags, message, self) => {
     await client.say(channel, `Can't get rank for user ${player}`);
     return;
   }
-  console.log(playerId);
   const randomInt = getRandomInt(0, 10000);
   const url = `http://autochess.ppbizon.com/courier/get/@${playerId}?hehe=${randomInt}`;
   const response = await fetch(url);
   const json = await response.json();
-  const mmr_level = json["user_info"][playerId]["mmr_level"];
-  const human_mmr = convertToHuman(mmr_level);
+  const playerInfo = json["user_info"][playerId];
+  const human_mmr = convertToHuman(playerInfo);
   await client.say(channel, `@${tags.username} rank of ${player} is ${human_mmr}`);
 });
 
@@ -46,7 +45,7 @@ client.on("connected", (addr, port) => console.log(`* Connected to ${addr}:${por
 client.connect();
 
 async function getPlayerId(argument) {
-  const hasSymbols = argument.split('').some(c => isChar(c));
+  const hasSymbols = argument.split('').some(isChar);
   if (!hasSymbols) {
     return argument;
   }
@@ -70,7 +69,8 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function convertToHuman(mmr) {
+function convertToHuman(playerInfo) {
+  const mmr = playerInfo["mmr_level"];
   if (mmr === 0) {
     return 'Unranked';
   } else if (mmr > 0 && mmr <= 9) {
@@ -81,5 +81,9 @@ function convertToHuman(mmr) {
     return `Bishop ${mmr - 18}`;
   } else if (mmr > 27 && mmr <= 36) {
     return `Rook ${mmr - 27}`;
+  } else if (mmr === 37) {
+    return 'King';
+  } else {
+    return `Queen #${playerInfo['queen_rank']}`;
   }
 }
