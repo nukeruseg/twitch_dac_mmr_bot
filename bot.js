@@ -14,7 +14,25 @@ const opts = {
 const client = new tmi.client(opts);
 
 // Register our event handlers (defined below)
-client.on("message", onMessageHandler);
+client.on("message", async (channel, tags, message, self) => {
+  if (self) {
+    return;
+  }
+  const command = message.split(" ");
+  const commandName = command[0];
+  if (commandName !== "!rank") {
+    await client.say(channel, "Unknown command");
+    return;
+  }
+  const playerId = command[1];
+  const randomInt = getRandomInt(0, 10000);
+  const url = `http://autochess.ppbizon.com/courier/get/@${playerId}?hehe=${randomInt}`;
+  const response = await fetch(url);
+  const json = await response.json();
+  const mmr_level = json["user_info"][playerId]["mmr_level"];
+  await client.say(channel, mmr_level);
+});
+
 client.on("connected", onConnectedHandler);
 
 // Connect to Twitch:
@@ -24,31 +42,6 @@ function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min;
-}
-
-// Called every time a message comes in
-function onMessageHandler(channel, tags, message, self) {
-  if (self) {
-    return;
-  }
-  console.log(message);
-  const command = message.split(" ");
-  const commandName = command[0];
-  if (commandName !== "!rank") {
-    client.say("Unknown command");
-    return;
-  }
-  const playerId = command[1];
-  const randomInt = getRandomInt(0, 10000);
-  const url = `http://autochess.ppbizon.com/courier/get/@${playerId}?hehe=${randomInt}`;
-  const response = fetch(url).then((resp) => {
-    resp.json().then((json) => {
-      console.log(JSON.stringify(json));
-      const mmr_level = json['user_info'][playerId]['mmr_level'];
-      console.log(mmr_level);
-      client.say(channel, mmr_level);
-    });
-  });
 }
 
 // Called every time the bot connects to Twitch chat
