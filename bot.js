@@ -39,6 +39,10 @@ client.on("connected", (addr, port) => console.log(`* Connected to ${addr}:${por
 // Connect to Twitch:
 client.connect();
 
+async function getPlayerId() {
+  
+}
+
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
