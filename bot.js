@@ -24,7 +24,10 @@ client.on("message", async (channel, tags, message, self) => {
     await client.say(channel, "Unknown command");
     return;
   }
-  const playerId = command[1];
+  const hasSymbols = command[1].some(c => c.isChar(c));
+  if (hasSymbols) {
+    
+  }
   const randomInt = getRandomInt(0, 10000);
   const url = `http://autochess.ppbizon.com/courier/get/@${playerId}?hehe=${randomInt}`;
   const response = await fetch(url);
@@ -39,8 +42,23 @@ client.on("connected", (addr, port) => console.log(`* Connected to ${addr}:${por
 // Connect to Twitch:
 client.connect();
 
-async function getPlayerId() {
-  
+async function getPlayerId(argument) {
+  const hasSymbols = argument.some(c => c.isChar(c));
+  if (!hasSymbols) {
+    return 
+  }
+  const url = `http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${process.env.STEAM_API_KEY}&vanityurl=${nickName}`;
+  const response = await fetch(url);
+  const json = await response.json();
+  if (json['response']['steamid']) {
+    return json['response']['steamid'];
+  } else {
+    return null;
+  }
+}
+
+function isChar(c) {
+  return c.toUpperCase() != c.toLowerCase() || c.codePointAt(0) > 127;
 }
 
 function getRandomInt(min, max) {
