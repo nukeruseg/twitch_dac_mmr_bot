@@ -44,16 +44,11 @@ function onMessageHandler(channel, tags, message, self) {
   const response = fetch(url).then((resp) => {
     resp.json().then((json) => {
       console.log(JSON.stringify(json));
-      const mmr_level = json["mmr_level"].toString();
+      const mmr_level = json['user_info'][playerId]['mmr_level'];
+      console.log(mmr_level);
       client.say(channel, mmr_level);
     });
   });
-}
-
-// Function called when the "dice" command is issued
-function rollDice() {
-  const sides = 20;
-  return Math.floor(Math.random() * sides) + 1;
 }
 
 // Called every time the bot connects to Twitch chat
