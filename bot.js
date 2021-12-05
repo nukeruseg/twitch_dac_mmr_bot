@@ -1,5 +1,5 @@
-const tmi = require('tmi.js');
-import fetch from 'node-fetch';
+const tmi = require("tmi.js");
+const fetch = require("cross-fetch");
 
 // Define configuration options
 const opts = {
@@ -7,17 +7,15 @@ const opts = {
     username: process.env.BOT_USERNAME,
     password: process.env.OAUTH_TOKEN
   },
-  channels: [
-    process.env.CHANNEL_NAME
-  ]
+  channels: [process.env.CHANNEL_NAME]
 };
 
 // Create a client with our options
 const client = new tmi.client(opts);
 
 // Register our event handlers (defined below)
-client.on('message', onMessageHandler);
-client.on('connected', onConnectedHandler);
+client.on("message", onMessageHandler);
+client.on("connected", onConnectedHandler);
 
 // Connect to Twitch:
 client.connect();
@@ -25,18 +23,19 @@ client.connect();
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; 
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 // Called every time a message comes in
-async function onMessageHandler (target, context, msg, self) {
-  if (self) { return; } // Ignore messages from the bot
+function onMessageHandler(target, context, msg, self) {
+  if (self) {
+    return;
+  }
   console.log(msg);
-  // Remove whitespace from chat message
-  const command = msg.split(' ');
+  const command = msg.split(" ");
   const commandName = command[0];
-  if (commandName !== '!rank') {
-    await client.say('Unknown command');
+  if (commandName !== "!rank") {
+    client.say("Unknown command");
     return;
   }
   const playerId = command[1];
@@ -44,18 +43,18 @@ async function onMessageHandler (target, context, msg, self) {
   const url = `http://autochess.ppbizon.com/courier/get/@${playerId}?hehe=${randomInt}`;
   const response = await fetch(url);
   const json = await response.json();
-  client.say(json);
-  const mmr_level = json['mmr_level'];
+  client.say(target, json);
+  const mmr_level = json["mmr_level"];
   client.say(mmr_level);
 }
 
 // Function called when the "dice" command is issued
-function rollDice () {
+function rollDice() {
   const sides = 20;
   return Math.floor(Math.random() * sides) + 1;
 }
 
 // Called every time the bot connects to Twitch chat
-function onConnectedHandler (addr, port) {
+function onConnectedHandler(addr, port) {
   console.log(`* Connected to ${addr}:${port}`);
 }

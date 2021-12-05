@@ -1,6 +1,6 @@
 dependencies:
+  cross-fetch: 3.1.4
   express: 4.16.4
-  node-fetch: 3.1.0
   tmi.js: 1.2.1
 packages:
   /accepts/1.3.5:
@@ -158,6 +158,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
+  /cross-fetch/3.1.4:
+    dependencies:
+      node-fetch: 2.6.1
+    dev: false
+    resolution:
+      integrity: sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
   /cryptiles/2.0.5:
     dependencies:
       boom: 2.10.1
@@ -175,12 +181,6 @@ packages:
       node: '>=0.10'
     resolution:
       integrity: sha1-hTz6D3y+L+1d4gMmuN1YEDX24vA=
-  /data-uri-to-buffer/4.0.0:
-    dev: false
-    engines:
-      node: '>= 12'
-    resolution:
-      integrity: sha512-Vr3mLBA8qWmcuschSLAOogKgQ/Jwxulv3RNE4FXnYWRGujzrRWQI4m12fQqRkwX06C0KanhLr4hK+GydchZsaA==
   /debug/2.6.9:
     dependencies:
       ms: 2.0.0
@@ -289,14 +289,6 @@ packages:
       '0': node >=0.6.0
     resolution:
       integrity: sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
-  /fetch-blob/3.1.3:
-    dependencies:
-      web-streams-polyfill: 3.2.0
-    dev: false
-    engines:
-      node: ^12.20 || >= 14.13
-    resolution:
-      integrity: sha512-ax1Y5I9w+9+JiM+wdHkhBoxew+zG4AJ2SvAD1v1szpddUIiPERVGBxrMcB2ZqW0Y3PP8bOWYv2zqQq1Jp2kqUQ==
   /finalhandler/1.1.1:
     dependencies:
       debug: 2.6.9
@@ -325,14 +317,6 @@ packages:
       node: '>= 0.10'
     resolution:
       integrity: sha1-rjFduaSQf6BlUCMEpm13M0de43w=
-  /formdata-polyfill/4.0.10:
-    dependencies:
-      fetch-blob: 3.1.3
-    dev: false
-    engines:
-      node: '>=12.20.0'
-    resolution:
-      integrity: sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==
   /forwarded/0.1.2:
     dev: false
     engines:
@@ -549,16 +533,12 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-KzJxhOiZIQEXeyhWP7XnECrNDKk=
-  /node-fetch/3.1.0:
-    dependencies:
-      data-uri-to-buffer: 4.0.0
-      fetch-blob: 3.1.3
-      formdata-polyfill: 4.0.10
+  /node-fetch/2.6.1:
     dev: false
     engines:
-      node: ^12.20.0 || ^14.13.1 || >=16.0.0
+      node: 4.x || >=6.0.0
     resolution:
-      integrity: sha512-QU0WbIfMUjd5+MUzQOYhenAazakV7Irh1SGkWCsRzBwvm4fAhzEUaHMJ6QLP7gWT6WO9/oH2zhKMMGMuIrDyKw==
+      integrity: sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
   /node-uuid/1.4.8:
     deprecated: Use uuid module instead
     dev: false
@@ -864,12 +844,6 @@ packages:
       '0': node >=0.6.0
     resolution:
       integrity: sha1-OhBcoXBTr1XW4nDB+CiGguGNpAA=
-  /web-streams-polyfill/3.2.0:
-    dev: false
-    engines:
-      node: '>= 8'
-    resolution:
-      integrity: sha512-EqPmREeOzttaLRm5HS7io98goBgZ7IVz79aDvqjD0kYXLtFZTc0T/U6wHTPKyIjb+MdN7DFIIX6hgdBEpWmfPA==
   /ws/1.0.1:
     dependencies:
       options: 0.0.6
@@ -887,6 +861,6 @@ registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
+  cross-fetch: ^3.1.4
   express: ^4.16.4
-  node-fetch: ^3.1.0
   tmi.js: ^1.2.1
