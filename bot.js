@@ -27,12 +27,12 @@ function getRandomInt(min, max) {
 }
 
 // Called every time a message comes in
-function onMessageHandler(target, context, msg, self) {
+function onMessageHandler(channel, tags, message, self) {
   if (self) {
     return;
   }
-  console.log(msg);
-  const command = msg.split(" ");
+  console.log(message);
+  const command = message.split(" ");
   const commandName = command[0];
   if (commandName !== "!rank") {
     client.say("Unknown command");
@@ -41,11 +41,13 @@ function onMessageHandler(target, context, msg, self) {
   const playerId = command[1];
   const randomInt = getRandomInt(0, 10000);
   const url = `http://autochess.ppbizon.com/courier/get/@${playerId}?hehe=${randomInt}`;
-  const response = await fetch(url);
-  const json = await response.json();
-  client.say(target, json);
-  const mmr_level = json["mmr_level"];
-  client.say(mmr_level);
+  const response = fetch(url).then((resp) => {
+    resp.json().then((json) => {
+      console.log(JSON.stringify(json));
+      const mmr_level = json["mmr_level"].toString();
+      client.say(channel, mmr_level);
+    });
+  });
 }
 
 // Function called when the "dice" command is issued
