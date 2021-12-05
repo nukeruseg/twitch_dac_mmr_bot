@@ -30,10 +30,11 @@ client.on("message", async (channel, tags, message, self) => {
   const response = await fetch(url);
   const json = await response.json();
   const mmr_level = json["user_info"][playerId]["mmr_level"];
-  await client.say(channel, mmr_level);
+  const human_mmr = convertToHuman(mmr_level);
+  await client.say(channel, `${human_mmr} MMR: ${mmr_level}`);
 });
 
-client.on("connected", onConnectedHandler);
+client.on("connected", (addr, port) => console.log(`* Connected to ${addr}:${port}`));
 
 // Connect to Twitch:
 client.connect();
@@ -44,7 +45,16 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-// Called every time the bot connects to Twitch chat
-function onConnectedHandler(addr, port) {
-  console.log(`* Connected to ${addr}:${port}`);
+function convertToHuman(mmr) {
+  if (mmr === 0) {
+    return 'Unranked';
+  } else if (mmr > 0 && mmr <= 9) {
+    return `Pawn ${mmr}`;    
+  } else if (mmr > 9 && mmr <= 18) {
+    return `Knight ${mmr - 9}`;    
+  } else if (mmr > 18 && mmr <= 27) {
+    return `Bishop ${mmr - 18}`;
+  } else if (mmr > 27 && mmr <= 36) {
+    return `Rook ${mmr - 27}`;
+  }
 }
