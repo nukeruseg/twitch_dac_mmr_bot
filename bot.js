@@ -31,7 +31,7 @@ client.on("message", async (channel, tags, message, self) => {
   const json = await response.json();
   const mmr_level = json["user_info"][playerId]["mmr_level"];
   const human_mmr = convertToHuman(mmr_level);
-  await client.say(channel, `${human_mmr} MMR: ${mmr_level}`);
+  await client.say(channel, human_mmr);
 });
 
 client.on("connected", (addr, port) => console.log(`* Connected to ${addr}:${port}`));
