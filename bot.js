@@ -18,23 +18,26 @@ client.on("message", async (channel, tags, message, self) => {
   if (self) {
     return;
   }
+  console.log(tags);
   const command = message.split(" ");
-  const commandName = command[0];
+  const [commandName, player] = command;
   if (commandName !== "!rank") {
     await client.say(channel, "Unknown command");
     return;
   }
-  const hasSymbols = command[1].some(c => c.isChar(c));
-  if (hasSymbols) {
-    
+  const playerId = await getPlayerId(player);
+  if (!playerId) {
+    await client.say(channel, `Can't get rank for user ${player}`);
+    return;
   }
+  console.log(playerId);
   const randomInt = getRandomInt(0, 10000);
   const url = `http://autochess.ppbizon.com/courier/get/@${playerId}?hehe=${randomInt}`;
   const response = await fetch(url);
   const json = await response.json();
   const mmr_level = json["user_info"][playerId]["mmr_level"];
   const human_mmr = convertToHuman(mmr_level);
-  await client.say(channel, human_mmr);
+  await client.say(channel, `@${tags.username} rank of ${player} is ${human_mmr}`);
 });
 
 client.on("connected", (addr, port) => console.log(`* Connected to ${addr}:${port}`));
@@ -43,11 +46,11 @@ client.on("connected", (addr, port) => console.log(`* Connected to ${addr}:${por
 client.connect();
 
 async function getPlayerId(argument) {
-  const hasSymbols = argument.some(c => c.isChar(c));
+  const hasSymbols = argument.split('').some(c => isChar(c));
   if (!hasSymbols) {
-    return 
+    return argument;
   }
-  const url = `http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${process.env.STEAM_API_KEY}&vanityurl=${nickName}`;
+  const url = `http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key=${process.env.STEAM_API_KEY}&vanityurl=${argument}`;
   const response = await fetch(url);
   const json = await response.json();
   if (json['response']['steamid']) {
