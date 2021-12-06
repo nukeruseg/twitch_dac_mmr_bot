@@ -23,7 +23,7 @@ client.on("message", async (channel, tags, message, self) => {
     return;
   }
   const [commandName, player] = message.split(' ');
-  console.log(`rank check for ${player}`);
+  console.log(`Rank check. channel: ${channel} user: ${tags.username} player: ${player}`);
   if (commandName !== "!rank") {
     await client.say(channel, "Unknown command");
     return;
