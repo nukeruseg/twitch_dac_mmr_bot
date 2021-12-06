@@ -1,12 +1,16 @@
+require('dotenv').config();
 const tmi = require("tmi.js");
 const fetch = require("cross-fetch");
 
 const opts = {
+  connection: {
+    reconnect: true
+  },
+  channels: process.env.CHANNEL_NAME.split(','),
   identity: {
     username: process.env.BOT_USERNAME,
     password: process.env.OAUTH_TOKEN
   },
-  channels: [process.env.CHANNEL_NAME]
 };
 
 const client = new tmi.client(opts);
@@ -15,9 +19,10 @@ client.on("message", async (channel, tags, message, self) => {
   if (self) {
     return;
   }
-  if (message.startsWith('!'))
-  const command = message.split(' ');
-  const [commandName, player] = command;
+  if (!message.startsWith("!rank")) {
+    return;
+  }
+  const [commandName, player] = message.split(' ');
   if (commandName !== "!rank") {
     await client.say(channel, "Unknown command");
     return;
